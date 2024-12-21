@@ -127,7 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoardLogic.cpp" />
     <ClCompile Include="tafl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BoardLogic.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
