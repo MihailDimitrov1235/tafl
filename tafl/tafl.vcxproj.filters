@@ -18,12 +18,18 @@
     <ClCompile Include="tafl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BoardLogic.cpp">
+    <ClCompile Include="boardLogic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gameLogic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BoardLogic.h">
+    <ClInclude Include="boardLogic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameLogic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,7 +14,8 @@
 *
 */
 #include <iostream>
-#include "BoardLogic.h"
+#include "boardLogic.h"
+#include "gameLogic.h"
 using namespace std;
 
 void startGame() {
@@ -22,6 +23,10 @@ void startGame() {
 	size_t boardSize = getBoardSize();
 	char** board = getBoard(boardSize);
 	printBoard(board, boardSize);
+
+	while (!hasGameEnded(board, boardSize)) {
+		cout << "no";
+	}
 
 	deleteBoard(board, boardSize);
 }

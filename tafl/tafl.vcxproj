@@ -127,11 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BoardLogic.cpp" />
+    <ClCompile Include="boardLogic.cpp" />
+    <ClCompile Include="gameLogic.cpp" />
     <ClCompile Include="tafl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BoardLogic.h" />
+    <ClInclude Include="boardLogic.h" />
+    <ClInclude Include="gameLogic.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
