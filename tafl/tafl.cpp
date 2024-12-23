@@ -26,6 +26,7 @@ void startGame() {
 	bool isDefenderTurn = true;
 	while (!hasGameEnded(board, boardSize)) {
 		printBoard(board, boardSize);
+		cout << "It's " << (isDefenderTurn ? "defender" : "attacker") << "'s turn.\n";
 		playerTurn(board, boardSize, isDefenderTurn);
 		isDefenderTurn = !isDefenderTurn;
 	}

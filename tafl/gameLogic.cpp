@@ -72,8 +72,14 @@ bool hasGameEnded(char** board, size_t boardSize) {
 		for (size_t j = 0; j < boardSize; j++) {
 			if (board[i][j] == KING)
 			{
-				if (isKingOnTheEdge(boardSize, i, j) || isKingSurrounded(board, boardSize, i, j))
+				if (isKingOnTheEdge(boardSize, i, j))
 				{
+					cout << "Defender wins!";
+					return true;
+				}
+				if (isKingSurrounded(board, boardSize, i, j))
+				{
+					cout << "Attacker wins!";
 					return true;
 				}
 				return false;
@@ -140,7 +146,7 @@ bool canMoveTo(bool isKing, char place) {
 	{
 		return true;
 	}
-	return place == CASTLE && isKing;
+	return (place == CASTLE || place == EDGE) && isKing;
 }
 
 bool isVerticalOrHorizontal(int fromX, int fromY, int toX, int toY) {
@@ -227,25 +233,34 @@ bool isValidMove(char** board, size_t boardSize, char* moveFrom, char* moveTo, b
 
 void makeCaptures(char** board, size_t boardSize, int pieceX, int pieceY, bool isDefender) {
 	char enemy = isDefender ? ATTACKER : DEFENDER;
+	size_t capturedPieces = 0;
 	if (pieceY - 2 >= 0
 		&& board[pieceY - 1][pieceX] == enemy
 		&& isHostile(board[pieceY - 2][pieceX], !isDefender)) {
 		board[pieceY - 1][pieceX] = EMPTY;
+		capturedPieces++;
 	}
 	if (pieceY + 2 < boardSize
 		&& board[pieceY + 1][pieceX] == enemy
 		&& isHostile(board[pieceY + 2][pieceX], !isDefender)) {
 		board[pieceY + 1][pieceX] = EMPTY;
+		capturedPieces++;
 	}
 	if (pieceX - 2 >= 0
 		&& board[pieceY][pieceX - 1] == enemy
 		&& isHostile(board[pieceY][pieceX - 2], !isDefender)) {
 		board[pieceY][pieceX - 1] = EMPTY;
+		capturedPieces++;
 	}
 	if (pieceX + 2 < boardSize
 		&& board[pieceY][pieceX + 1] == enemy
 		&& isHostile(board[pieceY][pieceX + 2], !isDefender)) {
 		board[pieceY][pieceX + 1] = EMPTY;
+		capturedPieces++;
+	}
+	if (capturedPieces > 0)
+	{
+		cout << (isDefender ? "Defender" : "Attacker") << " captured " << capturedPieces << " pieces.";
 	}
 }
 
@@ -254,8 +269,6 @@ void makeMove(char** board, size_t boardSize, char* moveFrom, char* moveTo, bool
 	int moveFromX = getColFromLetter(moveFrom[0]);
 	int moveToY = getRowFromBoardLocation(moveTo) - 1;
 	int moveToX = getColFromLetter(moveTo[0]);
-
-	cout << moveToY << " " << moveToX;
 
 	board[moveToY][moveToX] = board[moveFromY][moveFromX];
 	if (moveFromX == (boardSize - 1) / 2 && moveFromY == (boardSize - 1) / 2) {
@@ -290,7 +303,7 @@ void playerTurn(char** board, size_t boardSize, bool isDefender) {
 
 		}
 		else if (compareStrings(option, "help") || compareStrings(option, "Help")) {
-
+			printHelp();
 		}
 		else {
 			cout << "Invalid command. Try again. Write \"help\" to see available commands\n";
