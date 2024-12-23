@@ -281,7 +281,7 @@ void makeMove(char** board, size_t boardSize, char* moveFrom, char* moveTo, bool
 	makeCaptures(board, boardSize, moveToX, moveToY, isDefender);
 }
 
-void playerTurn(char** board, size_t boardSize, bool isDefender) {
+void playerTurn(char** board, size_t boardSize, bool isDefender, bool& quit) {
 	const int MAX_WORD_SIZE = 255;
 	char option[MAX_WORD_SIZE];
 	char moveFrom[MAX_WORD_SIZE];
@@ -299,8 +299,12 @@ void playerTurn(char** board, size_t boardSize, bool isDefender) {
 		else if (compareStrings(option, "info") || compareStrings(option, "Info")) {
 
 		}
-		else if (compareStrings(option, "quit") || compareStrings(option, "Quit")) {
+		else if (compareStrings(option, "back") || compareStrings(option, "Back")) {
 
+		}
+		else if (compareStrings(option, "quit") || compareStrings(option, "Quit")) {
+			quit = true;
+			break;
 		}
 		else if (compareStrings(option, "help") || compareStrings(option, "Help")) {
 			printHelp();

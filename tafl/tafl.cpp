@@ -24,13 +24,16 @@ void startGame() {
 	char** board = getBoard(boardSize);
 
 	bool isDefenderTurn = true;
+	bool quit = false;
 	while (!hasGameEnded(board, boardSize)) {
 		printBoard(board, boardSize);
 		cout << "It's " << (isDefenderTurn ? "defender" : "attacker") << "'s turn.\n";
-		playerTurn(board, boardSize, isDefenderTurn);
+		playerTurn(board, boardSize, isDefenderTurn, quit);
 		isDefenderTurn = !isDefenderTurn;
+		if (quit) {
+			break;
+		}
 	}
-
 	deleteBoard(board, boardSize);
 }
 
