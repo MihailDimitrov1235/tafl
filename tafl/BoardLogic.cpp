@@ -149,3 +149,11 @@ void printBoard(char** board, size_t boardSize) {
 		cout << letter << " ";
 	}
 }
+
+void deleteBoard(char** board, size_t boardSize) {
+	for (size_t i = 0; i < boardSize; i++)
+	{
+		delete[] board[i];
+	}
+	delete[] board;
+}

@@ -10,5 +10,6 @@ extern const char CASTLE;
 
 char** getBoard(size_t boardSize);
 void printBoard(char** board, size_t boardSize);
+void deleteBoard(char** board, size_t boardSize);
 
 #endif 

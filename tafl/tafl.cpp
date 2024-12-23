@@ -41,6 +41,8 @@ void startGame() {
 
 	char** board = getBoard(boardSize);
 	printBoard(board, boardSize);
+
+	deleteBoard(board, boardSize);
 }
 
 void mainMenu() {
