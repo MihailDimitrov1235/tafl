@@ -22,10 +22,10 @@ void startGame() {
 
 	size_t boardSize = getBoardSize();
 	char** board = getBoard(boardSize);
-	printBoard(board, boardSize);
 
 	bool isDefenderTurn = true;
 	while (!hasGameEnded(board, boardSize)) {
+		printBoard(board, boardSize);
 		playerTurn(board, boardSize, isDefenderTurn);
 		isDefenderTurn = !isDefenderTurn;
 	}

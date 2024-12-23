@@ -153,12 +153,12 @@ void printBoard(char** board, size_t boardSize) {
 			cout << board[i][j] << " ";
 		}
 		cout << " |";
-		if (boardSize - i >= 10)
+		if (i + 1 >= 10)
 		{
-			cout << boardSize - i;
+			cout << i + 1;
 		}
 		else {
-			cout << " " << boardSize - i;
+			cout << " " << i + 1;
 		}
 		cout << endl;
 	}

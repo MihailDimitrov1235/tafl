@@ -83,6 +83,20 @@ bool hasGameEnded(char** board, size_t boardSize) {
 	return false;
 }
 
+int getRowFromBoardLocation(char* boardLocation) {
+	int num = 0;
+	boardLocation++;
+	if (*boardLocation == '0')
+	{
+		return 0;
+	}
+	while (*boardLocation != '\0') {
+		num = num * 10 + (*boardLocation - '0');
+		boardLocation++;
+	}
+	return num;
+}
+
 int getColFromLetter(char letter) {
 	if (letter >= 'A' && letter <= 'Z')
 	{
@@ -96,28 +110,165 @@ bool isValidBoardLocation(char* boardLocation, size_t boardSize) {
 		&& !(boardLocation[0] >= 'A' && boardLocation[0] <= ('A' + boardSize - 1))) {
 		return false;
 	}
-	if (boardLocation[1] < 1 || boardLocation[1] > boardSize) {
+	int index = 1;
+	while (boardLocation[index] != '\0') {
+		if (boardLocation[index] < '0' || boardLocation[index] > '9') {
+			return false;
+		}
+		index++;
+	}
+	int row = getRowFromBoardLocation(boardLocation);
+
+	if (row < 1 || row > boardSize)
+	{
 		return false;
 	}
-	if (boardLocation[2] != '\0') {
+
+	return true;
+}
+
+bool isTheirPiece(bool isDefender, char piece) {
+	if (isDefender)
+	{
+		return piece == KING || piece == DEFENDER;
+	}
+	return piece == ATTACKER;
+}
+
+bool canMoveTo(bool isKing, char place) {
+	if (place == EMPTY)
+	{
+		return true;
+	}
+	return place == CASTLE && isKing;
+}
+
+bool isVerticalOrHorizontal(int fromX, int fromY, int toX, int toY) {
+	if ((fromX != toX && fromY != toY)
+		|| (fromX == toX && fromY == toY))
+	{
 		return false;
 	}
 	return true;
 }
 
-bool isValidMove(char* moveFrom, char* moveTo, bool defender, size_t boardSize) {
-	if (!isValidBoardLocation(moveFrom, boardSize) || !isValidBoardLocation(moveTo, boardSize))
-	{
-		return false;
-	}
-	int moveFromX = getColFromLetter(moveFrom[0]);
-	int moveFromY = moveFrom[1] - '0';
-	int moveToX = getColFromLetter(moveTo[0]);
-	int moveToY = moveTo[1] - '0';
-
+bool canMoveOver(char place) {
+	return place == EMPTY || place == CASTLE;
 }
 
-void playerTurn(char** board, size_t boardSize, bool defender) {
+bool isPathClearToMove(char** board, int fromX, int fromY, int toX, int toY, bool isDefender) {
+	if (fromX == toX) {
+		if (fromY > toY) {
+			for (int i = toY + 1; i < fromY; i++) {
+				if (!canMoveOver(board[i][fromX])) {
+					return false;
+				}
+			}
+		}
+		else {
+			for (int i = fromY + 1; i < toY; i++) {
+				if (!canMoveOver(board[i][fromX])) {
+					return false;
+				}
+			}
+		}
+	}
+	else {
+		if (fromX > toX) {
+			for (int i = toX + 1; i < fromX; i++) {
+				if (!canMoveOver(board[fromY][i])) {
+					return false;
+				}
+			}
+		}
+		else {
+			for (int i = fromX + 1; i < toX; i++) {
+				if (!canMoveOver(board[fromY][i])) {
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+bool isValidMove(char** board, size_t boardSize, char* moveFrom, char* moveTo, bool isDefender) {
+	if (!isValidBoardLocation(moveFrom, boardSize) || !isValidBoardLocation(moveTo, boardSize))
+	{
+		cout << "Invalid coordinates\n";
+		return false;
+	}
+	int moveFromY = getRowFromBoardLocation(moveFrom) - 1;
+	int moveFromX = getColFromLetter(moveFrom[0]);
+	int moveToY = getRowFromBoardLocation(moveTo) - 1;
+	int moveToX = getColFromLetter(moveTo[0]);
+	bool isKing = board[moveFromY][moveFromX] == KING;
+	if (!isTheirPiece(isDefender, board[moveFromY][moveFromX])) {
+		cout << "Not your piece. Try again.\n";
+		return false;
+	}
+	if (!canMoveTo(isKing, board[moveToY][moveToX]))
+	{
+		cout << "You can't move there. Try again.\n";
+		return false;
+	}
+	if (!isVerticalOrHorizontal(moveFromX, moveFromY, moveToX, moveToY))
+	{
+		cout << "The piece can only move vertically or horizontally. Try again.\n";
+		return false;
+	}
+	if (!isPathClearToMove(board, moveFromX, moveFromY, moveToX, moveToY, isDefender))
+	{
+		cout << "The path isn't clear. Try again.\n";
+		return false;
+	}
+	return true;
+}
+
+void makeCaptures(char** board, size_t boardSize, int pieceX, int pieceY, bool isDefender) {
+	char enemy = isDefender ? ATTACKER : DEFENDER;
+	if (pieceY - 2 >= 0
+		&& board[pieceY - 1][pieceX] == enemy
+		&& isHostile(board[pieceY - 2][pieceX], !isDefender)) {
+		board[pieceY - 1][pieceX] = EMPTY;
+	}
+	if (pieceY + 2 < boardSize
+		&& board[pieceY + 1][pieceX] == enemy
+		&& isHostile(board[pieceY + 2][pieceX], !isDefender)) {
+		board[pieceY + 1][pieceX] = EMPTY;
+	}
+	if (pieceX - 2 >= 0
+		&& board[pieceY][pieceX - 1] == enemy
+		&& isHostile(board[pieceY][pieceX - 2], !isDefender)) {
+		board[pieceY][pieceX - 1] = EMPTY;
+	}
+	if (pieceX + 2 < boardSize
+		&& board[pieceY][pieceX + 1] == enemy
+		&& isHostile(board[pieceY][pieceX + 2], !isDefender)) {
+		board[pieceY][pieceX + 1] = EMPTY;
+	}
+}
+
+void makeMove(char** board, size_t boardSize, char* moveFrom, char* moveTo, bool isDefender) {
+	int moveFromY = getRowFromBoardLocation(moveFrom) - 1;
+	int moveFromX = getColFromLetter(moveFrom[0]);
+	int moveToY = getRowFromBoardLocation(moveTo) - 1;
+	int moveToX = getColFromLetter(moveTo[0]);
+
+	cout << moveToY << " " << moveToX;
+
+	board[moveToY][moveToX] = board[moveFromY][moveFromX];
+	if (moveFromX == (boardSize - 1) / 2 && moveFromY == (boardSize - 1) / 2) {
+		board[moveFromY][moveFromX] = CASTLE;
+	}
+	else {
+		board[moveFromY][moveFromX] = EMPTY;
+	}
+
+	makeCaptures(board, boardSize, moveToX, moveToY, isDefender);
+}
+
+void playerTurn(char** board, size_t boardSize, bool isDefender) {
 	const int MAX_WORD_SIZE = 255;
 	char option[MAX_WORD_SIZE];
 	char moveFrom[MAX_WORD_SIZE];
@@ -127,8 +278,9 @@ void playerTurn(char** board, size_t boardSize, bool defender) {
 		cin >> option;
 		if (compareStrings(option, "move") || compareStrings(option, "Move")) {
 			cin >> moveFrom >> moveTo;
-			if (isValidMove(moveFrom, moveTo, defender, boardSize)) {
-
+			if (isValidMove(board, boardSize, moveFrom, moveTo, isDefender)) {
+				makeMove(board, boardSize, moveFrom, moveTo, isDefender);
+				break;
 			}
 		}
 		else if (compareStrings(option, "info") || compareStrings(option, "Info")) {
@@ -141,7 +293,7 @@ void playerTurn(char** board, size_t boardSize, bool defender) {
 
 		}
 		else {
-			cout << "Invalid command. Try again. Write \"help\" for assistance\n";
+			cout << "Invalid command. Try again. Write \"help\" to see available commands\n";
 		}
 	}
 }
