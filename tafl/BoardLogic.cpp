@@ -173,6 +173,7 @@ void printBoard(char** board, size_t boardSize) {
 		char letter = 'a' + i;
 		cout << letter << " ";
 	}
+	cout << endl;
 }
 
 void deleteBoard(char** board, size_t boardSize) {

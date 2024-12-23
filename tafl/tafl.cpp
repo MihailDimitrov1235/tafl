@@ -24,8 +24,10 @@ void startGame() {
 	char** board = getBoard(boardSize);
 	printBoard(board, boardSize);
 
+	bool isDefenderTurn = true;
 	while (!hasGameEnded(board, boardSize)) {
-		cout << "no";
+		playerTurn(board, boardSize, isDefenderTurn);
+		isDefenderTurn = !isDefenderTurn;
 	}
 
 	deleteBoard(board, boardSize);
