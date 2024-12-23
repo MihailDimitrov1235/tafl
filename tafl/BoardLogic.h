@@ -8,6 +8,7 @@ extern const char DEFENDER;
 extern const char EDGE;
 extern const char CASTLE;
 
+size_t getBoardSize();
 char** getBoard(size_t boardSize);
 void printBoard(char** board, size_t boardSize);
 void deleteBoard(char** board, size_t boardSize);

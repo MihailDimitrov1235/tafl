@@ -18,27 +18,8 @@
 using namespace std;
 
 void startGame() {
-	cout << endl << endl << "Choose game board size:\n\n";
-	cout << "1) 11x11 (Standard)\n";
-	cout << "2) 9x9\n";
-	cout << "3) 7x7\n\n";
-	cout << "Choose one of the options (1 - 3) : ";
 
-	size_t option;
-	cin >> option;
-
-	while (option < 1 || option > 3) {
-		cout << "Invalid option. Type a number between 1 and 3 : ";
-		cin >> option;
-	}
-
-	size_t boardSize = 11;
-	switch (option) {
-	case 1: boardSize = 11; break;
-	case 2: boardSize = 9; break;
-	case 3: boardSize = 7; break;
-	}
-
+	size_t boardSize = getBoardSize();
 	char** board = getBoard(boardSize);
 	printBoard(board, boardSize);
 
