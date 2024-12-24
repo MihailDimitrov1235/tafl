@@ -30,7 +30,7 @@ void startGame() {
 	int currentMove = 1;
 
 	while (!hasGameEnded(board, boardSize)) {
-		bool isDefenderTurn = currentMove & 1;
+		bool isDefenderTurn = currentMove % 2 == 0;
 		printBoard(board, boardSize);
 		cout << "It's " << (isDefenderTurn ? "defender" : "attacker") << "'s turn.\n";
 		playerTurn(board, boardSize, currentMove, moveHistory, quit);

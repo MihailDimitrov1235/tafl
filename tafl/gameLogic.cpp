@@ -325,7 +325,7 @@ void goBackOneMove(char** board, size_t boardSize, int& currentMove, Move moveHi
 			break;
 		}
 
-		char symbol = currentMove & 1 ? DEFENDER : ATTACKER;
+		char symbol = currentMove & 1 ? ATTACKER : DEFENDER;
 		board[row][col] = symbol;
 	}
 	currentMove -= 2;
@@ -335,11 +335,11 @@ int countCaptures(int currentMove, Move moveHistory[], bool countDefenders) {
 	size_t counter = 0;
 	for (size_t i = 0; i < currentMove - 1; i++)
 	{
-		if (countDefenders && (i % 2 == 0))
+		if (countDefenders && (i % 2 == 1))
 		{
 			continue;
 		}
-		if (!countDefenders && (i % 2 == 1))
+		if (!countDefenders && (i % 2 == 0))
 		{
 			continue;
 		}
@@ -364,7 +364,7 @@ void playerTurn(char** board, size_t boardSize, int& currentMove, Move moveHisto
 	char option[MAX_WORD_SIZE];
 	char moveFrom[MAX_WORD_SIZE];
 	char moveTo[MAX_WORD_SIZE];
-	bool isDefender = currentMove & 1;
+	bool isDefender = currentMove % 2 == 0;
 
 	while (true) {
 		cin >> option;
