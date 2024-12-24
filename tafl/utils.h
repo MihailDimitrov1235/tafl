@@ -13,5 +13,6 @@ struct Move {
 
 bool compareStrings(const char* str1, const char* str2);
 void printHelp();
+void printInfo(int capturedDefenders, int capturedAttackers, int currentMove);
 
 #endif 

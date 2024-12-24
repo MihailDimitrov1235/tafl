@@ -45,3 +45,10 @@ void printHelp() {
 	cout << "quit\n"
 		<< "Quits the game\n\n";
 }
+
+void printInfo(int capturedDefenders, int capturedAttackers, int currentMove) {
+	cout << "Current move: " << currentMove << endl;
+	cout << (currentMove % 2 == 1 ? "Defender" : "Attacker") << "'s move" << endl;
+	cout << "Captured defenders: " << capturedDefenders << endl;
+	cout << "Captured attackers: " << capturedAttackers << endl;
+}

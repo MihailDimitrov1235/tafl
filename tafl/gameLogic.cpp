@@ -18,6 +18,8 @@
 #include "utils.h"
 using namespace std;
 
+const int NUMBER_OF_POSSIBLE_CAPTURES = 4;
+
 bool isKingOnTheEdge(size_t boardSize, size_t kingRow, size_t kingCol) {
 	if (kingRow == kingCol && (kingRow == 0 || kingRow == boardSize - 1))
 	{
@@ -313,7 +315,7 @@ void goBackOneMove(char** board, size_t boardSize, int& currentMove, Move moveHi
 		board[moveFromY][moveFromX] = EMPTY;
 	}
 
-	for (size_t i = 0; i < 4; i++)
+	for (size_t i = 0; i < NUMBER_OF_POSSIBLE_CAPTURES; i++)
 	{
 		int row = move.captures[i].row;
 		int col = move.captures[i].col;
@@ -327,6 +329,34 @@ void goBackOneMove(char** board, size_t boardSize, int& currentMove, Move moveHi
 		board[row][col] = symbol;
 	}
 	currentMove -= 2;
+}
+
+int countCaptures(int currentMove, Move moveHistory[], bool countDefenders) {
+	size_t counter = 0;
+	for (size_t i = 0; i < currentMove - 1; i++)
+	{
+		if (countDefenders && (i % 2 == 0))
+		{
+			continue;
+		}
+		if (!countDefenders && (i % 2 == 1))
+		{
+			continue;
+		}
+		Move move = moveHistory[i];
+		for (size_t j = 0; j < NUMBER_OF_POSSIBLE_CAPTURES; j++)
+		{
+			int row = move.captures[j].row;
+			int col = move.captures[j].col;
+
+			if (row == -1 || col == -1)
+			{
+				break;
+			}
+			counter++;
+		}
+	}
+	return counter;
 }
 
 void playerTurn(char** board, size_t boardSize, int& currentMove, Move moveHistory[], bool& quit) {
@@ -351,7 +381,9 @@ void playerTurn(char** board, size_t boardSize, int& currentMove, Move moveHisto
 			}
 		}
 		else if (compareStrings(option, "info") || compareStrings(option, "Info")) {
-
+			int capturedDefenders = countCaptures(currentMove, moveHistory, true);
+			int capturedAttackers = countCaptures(currentMove, moveHistory, false);
+			printInfo(capturedDefenders, capturedAttackers, currentMove);
 		}
 		else if (compareStrings(option, "back") || compareStrings(option, "Back")) {
 			goBackOneMove(board, boardSize, currentMove, moveHistory);
