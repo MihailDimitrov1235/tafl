@@ -231,40 +231,52 @@ bool isValidMove(char** board, size_t boardSize, char* moveFrom, char* moveTo, b
 	return true;
 }
 
-void makeCaptures(char** board, size_t boardSize, int pieceX, int pieceY, bool isDefender) {
+void makeCaptures(char** board, size_t boardSize, int pieceX, int pieceY, bool isDefender, Move moveHistory[], int currentMove) {
 	char enemy = isDefender ? ATTACKER : DEFENDER;
 	size_t capturedPieces = 0;
 	if (pieceY - 2 >= 0
 		&& board[pieceY - 1][pieceX] == enemy
 		&& isHostile(board[pieceY - 2][pieceX], !isDefender)) {
 		board[pieceY - 1][pieceX] = EMPTY;
+		moveHistory[currentMove - 1].captures[capturedPieces] = { pieceY - 1 , pieceX };
 		capturedPieces++;
 	}
 	if (pieceY + 2 < boardSize
 		&& board[pieceY + 1][pieceX] == enemy
 		&& isHostile(board[pieceY + 2][pieceX], !isDefender)) {
 		board[pieceY + 1][pieceX] = EMPTY;
+		moveHistory[currentMove - 1].captures[capturedPieces] = { pieceY + 1 , pieceX };
 		capturedPieces++;
 	}
 	if (pieceX - 2 >= 0
 		&& board[pieceY][pieceX - 1] == enemy
 		&& isHostile(board[pieceY][pieceX - 2], !isDefender)) {
 		board[pieceY][pieceX - 1] = EMPTY;
+		moveHistory[currentMove - 1].captures[capturedPieces] = { pieceY , pieceX - 1 };
 		capturedPieces++;
 	}
 	if (pieceX + 2 < boardSize
 		&& board[pieceY][pieceX + 1] == enemy
 		&& isHostile(board[pieceY][pieceX + 2], !isDefender)) {
 		board[pieceY][pieceX + 1] = EMPTY;
+		moveHistory[currentMove - 1].captures[capturedPieces] = { pieceY , pieceX + 1 };
 		capturedPieces++;
 	}
 	if (capturedPieces > 0)
 	{
-		cout << (isDefender ? "Defender" : "Attacker") << " captured " << capturedPieces << " pieces.";
+		cout << (isDefender ? "Defender" : "Attacker") << " captured " << capturedPieces
+			<< " piece" << (capturedPieces > 1 ? "s" : "") << ".\n";
 	}
 }
 
-void makeMove(char** board, size_t boardSize, char* moveFrom, char* moveTo, bool isDefender) {
+void makeMove(char** board,
+	size_t boardSize,
+	char* moveFrom,
+	char* moveTo,
+	bool isDefender,
+	Move moveHistory[],
+	int currentMove) {
+
 	int moveFromY = getRowFromBoardLocation(moveFrom) - 1;
 	int moveFromX = getColFromLetter(moveFrom[0]);
 	int moveToY = getRowFromBoardLocation(moveTo) - 1;
@@ -277,22 +289,64 @@ void makeMove(char** board, size_t boardSize, char* moveFrom, char* moveTo, bool
 	else {
 		board[moveFromY][moveFromX] = EMPTY;
 	}
-
-	makeCaptures(board, boardSize, moveToX, moveToY, isDefender);
+	makeCaptures(board, boardSize, moveToX, moveToY, isDefender, moveHistory, currentMove);
 }
 
-void playerTurn(char** board, size_t boardSize, bool isDefender, bool& quit) {
+void goBackOneMove(char** board, size_t boardSize, int& currentMove, Move moveHistory[]) {
+	if (currentMove <= 1)
+	{
+		cout << "Can't go back any further\n";
+		return;
+	}
+	Move move = moveHistory[currentMove - 2];
+	int moveFromY = move.moveTo.row;
+	int moveFromX = move.moveTo.col;
+	cout << moveFromY << " " << moveFromX << endl;
+	int moveToY = move.moveFrom.row;
+	int moveToX = move.moveFrom.col;
+	cout << moveToY << " " << moveToX << endl;
+	board[moveToY][moveToX] = board[moveFromY][moveFromX];
+	if (moveFromX == (boardSize - 1) / 2 && moveFromY == (boardSize - 1) / 2) {
+		board[moveFromY][moveFromX] = CASTLE;
+	}
+	else {
+		board[moveFromY][moveFromX] = EMPTY;
+	}
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		int row = move.captures[i].row;
+		int col = move.captures[i].col;
+
+		if (row == -1 || col == -1)
+		{
+			break;
+		}
+
+		char symbol = currentMove & 1 ? DEFENDER : ATTACKER;
+		board[row][col] = symbol;
+	}
+	currentMove -= 2;
+}
+
+void playerTurn(char** board, size_t boardSize, int& currentMove, Move moveHistory[], bool& quit) {
 	const int MAX_WORD_SIZE = 255;
 	char option[MAX_WORD_SIZE];
 	char moveFrom[MAX_WORD_SIZE];
 	char moveTo[MAX_WORD_SIZE];
+	bool isDefender = currentMove & 1;
 
 	while (true) {
 		cin >> option;
 		if (compareStrings(option, "move") || compareStrings(option, "Move")) {
 			cin >> moveFrom >> moveTo;
 			if (isValidMove(board, boardSize, moveFrom, moveTo, isDefender)) {
-				makeMove(board, boardSize, moveFrom, moveTo, isDefender);
+				int moveFromY = getRowFromBoardLocation(moveFrom) - 1;
+				int moveFromX = getColFromLetter(moveFrom[0]);
+				int moveToY = getRowFromBoardLocation(moveTo) - 1;
+				int moveToX = getColFromLetter(moveTo[0]);
+				moveHistory[currentMove - 1] = { {moveFromY, moveFromX}, {moveToY, moveToX}, {{-1,-1},{-1,-1},{-1,-1}} };
+				makeMove(board, boardSize, moveFrom, moveTo, isDefender, moveHistory, currentMove);
 				break;
 			}
 		}
@@ -300,7 +354,8 @@ void playerTurn(char** board, size_t boardSize, bool isDefender, bool& quit) {
 
 		}
 		else if (compareStrings(option, "back") || compareStrings(option, "Back")) {
-
+			goBackOneMove(board, boardSize, currentMove, moveHistory);
+			break;
 		}
 		else if (compareStrings(option, "quit") || compareStrings(option, "Quit")) {
 			quit = true;

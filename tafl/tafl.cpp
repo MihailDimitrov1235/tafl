@@ -16,23 +16,28 @@
 #include <iostream>
 #include "boardLogic.h"
 #include "gameLogic.h"
+#include "utils.h"
 using namespace std;
 
 void startGame() {
+	const int MAX_MOVES = 1024;
+	Move moveHistory[MAX_MOVES];
 
 	size_t boardSize = getBoardSize();
 	char** board = getBoard(boardSize);
 
-	bool isDefenderTurn = true;
 	bool quit = false;
+	int currentMove = 1;
+
 	while (!hasGameEnded(board, boardSize)) {
+		bool isDefenderTurn = currentMove & 1;
 		printBoard(board, boardSize);
 		cout << "It's " << (isDefenderTurn ? "defender" : "attacker") << "'s turn.\n";
-		playerTurn(board, boardSize, isDefenderTurn, quit);
-		isDefenderTurn = !isDefenderTurn;
+		playerTurn(board, boardSize, currentMove, moveHistory, quit);
 		if (quit) {
 			break;
 		}
+		currentMove++;
 	}
 	deleteBoard(board, boardSize);
 }
