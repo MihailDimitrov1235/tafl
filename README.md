@@ -15,3 +15,5 @@ Console implementation of the game [Tafl](https://en.wikipedia.org/wiki/Tafl_gam
    1. Tablut
 - 7x7
    1. Brandubh
+- 13x13
+   1. Parlett
