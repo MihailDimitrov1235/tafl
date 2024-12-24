@@ -17,12 +17,12 @@
 #include "BoardLogic.h"
 using namespace std;
 
-const char EMPTY = '-';
-const char KING = 'K';
+const char EMPTY = 46;
+const char KING = 30;
 const char ATTACKER = 'A';
 const char DEFENDER = 'D';
-const char EDGE = 'X';
-const char CASTLE = 'C';
+const char EDGE = '*';
+const char CASTLE = 28;
 
 const char hnefataflBoard[11][11] = {
 	{ EDGE, EMPTY, EMPTY, ATTACKER, ATTACKER, ATTACKER, ATTACKER, ATTACKER, EMPTY, EMPTY, EDGE },
