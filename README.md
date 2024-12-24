@@ -5,7 +5,7 @@ Console implementation of the game [Tafl](https://en.wikipedia.org/wiki/Tafl_gam
 1. move \<from\> \<to\> - moves a piece if possible
 2. back - goes back one move
 3. info - gives information about how the game is going
-4. help - gives information about the aviable commands
+4. help - gives information about the available commands
 5. quit - quits to main menu
 
 ## Available boards
