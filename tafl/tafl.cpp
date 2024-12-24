@@ -42,7 +42,7 @@ void startGame() {
 	deleteBoard(board, boardSize);
 }
 
-void mainMenu() {
+void printWelcomeMessage() {
 	cout << "W       W  EEEEE  L       CCCCC  OOOOO  M     M  EEEEE" << endl;
 	cout << "W       W  E      L      C       O   O  MM   MM  E    " << endl;
 	cout << "W   W   W  EEEE   L      C       O   O  M M M M  EEEE " << endl;
@@ -62,7 +62,9 @@ void mainMenu() {
 	cout << "		  T    AAAAA  FFF    L    " << endl;
 	cout << "		  T    A   A  F      L    " << endl;
 	cout << "		  T    A   A  F      LLLLL" << endl;
+}
 
+void mainMenu() {
 	while (true) {
 		cout << "Main Menu\n\n";
 		cout << "1) Start game\n";
@@ -89,5 +91,6 @@ void mainMenu() {
 
 
 int main() {
+	printWelcomeMessage();
 	mainMenu();
 }
