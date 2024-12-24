@@ -5,7 +5,7 @@ extern const char EMPTY;
 extern const char KING;
 extern const char ATTACKER;
 extern const char DEFENDER;
-extern const char EDGE;
+extern const char CORNER;
 extern const char CASTLE;
 
 size_t getBoardSize();

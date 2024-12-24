@@ -20,7 +20,7 @@ using namespace std;
 
 const int NUMBER_OF_POSSIBLE_CAPTURES = 4;
 
-bool isKingOnTheEdge(size_t boardSize, size_t kingRow, size_t kingCol) {
+bool isKingInACorner(size_t boardSize, size_t kingRow, size_t kingCol) {
 	if (kingRow == kingCol && (kingRow == 0 || kingRow == boardSize - 1))
 	{
 		return true;
@@ -35,9 +35,9 @@ bool isKingOnTheEdge(size_t boardSize, size_t kingRow, size_t kingCol) {
 bool isHostile(char symbol, bool forDefenders) {
 	if (forDefenders)
 	{
-		return symbol == EDGE || symbol == CASTLE || symbol == ATTACKER;
+		return symbol == CORNER || symbol == CASTLE || symbol == ATTACKER;
 	}
-	return symbol == EDGE || symbol == CASTLE || symbol == DEFENDER;
+	return symbol == CORNER || symbol == CASTLE || symbol == DEFENDER;
 }
 
 bool isKingSurrounded(char** board, size_t boardSize, size_t kingRow, size_t kingCol) {
@@ -74,7 +74,7 @@ bool hasGameEnded(char** board, size_t boardSize) {
 		for (size_t j = 0; j < boardSize; j++) {
 			if (board[i][j] == KING)
 			{
-				if (isKingOnTheEdge(boardSize, i, j))
+				if (isKingInACorner(boardSize, i, j))
 				{
 					cout << "Defender wins!";
 					return true;
@@ -148,7 +148,7 @@ bool canMoveTo(bool isKing, char place) {
 	{
 		return true;
 	}
-	return (place == CASTLE || place == EDGE) && isKing;
+	return (place == CASTLE || place == CORNER) && isKing;
 }
 
 bool isVerticalOrHorizontal(int fromX, int fromY, int toX, int toY) {
