@@ -43,26 +43,48 @@ void startGame() {
 }
 
 void mainMenu() {
-	cout << "Welcome to Tafl\n\n\n";
-	cout << "Main Menu\n\n";
-	cout << "1) Start game\n";
-	cout << "2) Quit\n\n";
-	cout << "Choose one of the options (1 or 2) : ";
+	cout << "W       W  EEEEE  L       CCCCC  OOOOO  M     M  EEEEE" << endl;
+	cout << "W       W  E      L      C       O   O  MM   MM  E    " << endl;
+	cout << "W   W   W  EEEE   L      C       O   O  M M M M  EEEE " << endl;
+	cout << " W W W W   E      L      C       O   O  M  M  M  E    " << endl;
+	cout << "  W   W    EEEEE  LLLLL   CCCCC  OOOOO  M     M  EEEEE" << endl;
+	cout << endl;
 
-	int option;
-	cin >> option;
+	cout << "  		    TTTTT  OOOOO" << endl;
+	cout << "		      T    O   O" << endl;
+	cout << "		      T    O   O" << endl;
+	cout << "		      T    O   O" << endl;
+	cout << "		      T    OOOOO" << endl;
+	cout << endl;
 
-	while (option < 1 || option > 2) {
-		cout << "Invalid option. Type 1 or 2 : ";
+	cout << "		TTTTT  AAAAA  FFFFF  L    " << endl;
+	cout << "		  T    A   A  F      L    " << endl;
+	cout << "		  T    AAAAA  FFF    L    " << endl;
+	cout << "		  T    A   A  F      L    " << endl;
+	cout << "		  T    A   A  F      LLLLL" << endl;
+
+	while (true) {
+		cout << "Main Menu\n\n";
+		cout << "1) Start game\n";
+		cout << "2) Quit\n\n";
+		cout << "Choose one of the options (1 or 2) : ";
+
+		int option;
 		cin >> option;
+
+		while (option < 1 || option > 2) {
+			cout << "Invalid option. Type 1 or 2 : ";
+			cin >> option;
+		}
+
+		if (option == 2)
+		{
+			return;
+		}
+
+		startGame();
 	}
 
-	if (option == 2)
-	{
-		return;
-	}
-
-	startGame();
 }
 
 
