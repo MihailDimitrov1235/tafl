@@ -18,6 +18,7 @@
 #include "utils.h"
 using namespace std;
 
+const int MAX_WORD_SIZE = 255;
 const int NUMBER_OF_POSSIBLE_CAPTURES = 4;
 
 bool isKingInACorner(size_t boardSize, size_t kingRow, size_t kingCol) {
@@ -69,6 +70,10 @@ bool isKingSurrounded(char** board, size_t boardSize, size_t kingRow, size_t kin
 }
 
 bool hasGameEnded(char** board, size_t boardSize) {
+	if (board == nullptr)
+	{
+		return true;
+	}
 	for (size_t i = 0; i < boardSize; i++)
 	{
 		for (size_t j = 0; j < boardSize; j++) {
@@ -359,8 +364,20 @@ int countCaptures(int currentMove, Move moveHistory[], bool countDefenders) {
 	return counter;
 }
 
+void saveMove(char* moveFrom, char* moveTo, Move moveHistory[], int currentMove) {
+	int moveFromY = getRowFromBoardLocation(moveFrom) - 1;
+	int moveFromX = getColFromLetter(moveFrom[0]);
+	int moveToY = getRowFromBoardLocation(moveTo) - 1;
+	int moveToX = getColFromLetter(moveTo[0]);
+	moveHistory[currentMove - 1] = { {moveFromY, moveFromX}, {moveToY, moveToX}, {{-1,-1},{-1,-1},{-1,-1}} };
+}
+
 void playerTurn(char** board, size_t boardSize, int& currentMove, Move moveHistory[], bool& quit) {
-	const int MAX_WORD_SIZE = 255;
+	if (board == nullptr)
+	{
+		quit = true;
+		return;
+	}
 	char option[MAX_WORD_SIZE];
 	char moveFrom[MAX_WORD_SIZE];
 	char moveTo[MAX_WORD_SIZE];
@@ -371,11 +388,7 @@ void playerTurn(char** board, size_t boardSize, int& currentMove, Move moveHisto
 		if (compareStrings(option, "move") || compareStrings(option, "Move")) {
 			cin >> moveFrom >> moveTo;
 			if (isValidMove(board, boardSize, moveFrom, moveTo, isDefender)) {
-				int moveFromY = getRowFromBoardLocation(moveFrom) - 1;
-				int moveFromX = getColFromLetter(moveFrom[0]);
-				int moveToY = getRowFromBoardLocation(moveTo) - 1;
-				int moveToX = getColFromLetter(moveTo[0]);
-				moveHistory[currentMove - 1] = { {moveFromY, moveFromX}, {moveToY, moveToX}, {{-1,-1},{-1,-1},{-1,-1}} };
+				saveMove(moveFrom, moveTo, moveHistory, currentMove);
 				makeMove(board, boardSize, moveFrom, moveTo, isDefender, moveHistory, currentMove);
 				break;
 			}

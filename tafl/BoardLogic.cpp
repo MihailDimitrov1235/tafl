@@ -181,6 +181,12 @@ char** getBoard(size_t boardSize) {
 }
 
 void printBoard(char** board, size_t boardSize) {
+
+	if (board == nullptr)
+	{
+		return;
+	}
+
 	for (size_t i = 0; i < boardSize; i++)
 	{
 		for (size_t j = 0; j < boardSize; j++)
@@ -212,6 +218,10 @@ void printBoard(char** board, size_t boardSize) {
 }
 
 void deleteBoard(char** board, size_t boardSize) {
+	if (board == nullptr)
+	{
+		return;
+	}
 	for (size_t i = 0; i < boardSize; i++)
 	{
 		delete[] board[i];
