@@ -308,10 +308,8 @@ void goBackOneMove(char** board, size_t boardSize, int& currentMove, Move moveHi
 	Move move = moveHistory[currentMove - 2];
 	int moveFromY = move.moveTo.row;
 	int moveFromX = move.moveTo.col;
-	cout << moveFromY << " " << moveFromX << endl;
 	int moveToY = move.moveFrom.row;
 	int moveToX = move.moveFrom.col;
-	cout << moveToY << " " << moveToX << endl;
 	board[moveToY][moveToX] = board[moveFromY][moveFromX];
 	if (moveFromX == (boardSize - 1) / 2 && moveFromY == (boardSize - 1) / 2) {
 		board[moveFromY][moveFromX] = CASTLE;
