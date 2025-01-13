@@ -303,6 +303,7 @@ void goBackOneMove(char** board, size_t boardSize, int& currentMove, Move moveHi
 	if (currentMove <= 1)
 	{
 		cout << "Can't go back any further\n";
+		currentMove -= 1;
 		return;
 	}
 	Move move = moveHistory[currentMove - 2];
