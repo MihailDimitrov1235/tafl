@@ -81,12 +81,12 @@ bool hasGameEnded(char** board, size_t boardSize) {
 			{
 				if (isKingInACorner(boardSize, i, j))
 				{
-					cout << "Defender wins!";
+					cout << "Defender wins!" << endl;
 					return true;
 				}
 				if (isKingSurrounded(board, boardSize, i, j))
 				{
-					cout << "Attacker wins!";
+					cout << "Attacker wins!" << endl;
 					return true;
 				}
 				return false;
